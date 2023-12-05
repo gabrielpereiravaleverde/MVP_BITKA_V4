@@ -33,3 +33,4 @@ scikit_learn==1.3.2
 seaborn==0.13.0
 streamlit==1.27.2
 tqdm==4.66.1
+XlsxWriter~=3.1

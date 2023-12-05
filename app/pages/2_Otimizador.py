@@ -12,7 +12,7 @@ import re
 from libs.otimizador.otimizador import *
 from libs.utils.utils import *
 import copy
-import src.mvvflotacao.shared_code.optimization.optimizer as opt
+import libs.otimizador.optimizer as opt
 
 # Definição das etapas
 etapas = {
