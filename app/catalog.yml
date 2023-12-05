@@ -1,0 +1,9 @@
+conc_cd_full_data:
+  type: pandas.ParquetDataset
+  filepath: app/data/01_model_input/conc_cd/full_data_without_correlation_s0.pq
+
+
+# ebm models
+ebm_conc_cd:
+  type: pickle.PickleDataset
+  filepath: app/data/02_models/ebm_conc_cd.pickle

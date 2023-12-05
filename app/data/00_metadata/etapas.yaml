@@ -1,0 +1,43 @@
+variaveis_decisao:
+  Flotação Rougher 1:
+    Termodinâmica: 
+      - ["Espumante (g/t)_CD", "g/t"]
+    Hidrodinâmica: 
+      - ["VAZAO_AR_ROUGHER_COND", "N.m³/h"]
+      - ["ESPUMA_ROUGHER_COND", "mm"]
+
+todas_variaveis:
+  Moagem e Classificação:
+    Blend: 
+      - ["Sulfetado_HG", "%"]
+      - ["Sulfetado_LG", "%"]
+      - ["Sulfetado_MG", "%"]
+      - ["Sulfetado_SHG", "%"]
+    Granulometria: 
+      - ["PSI_OVER_CICLO", "μm"]
+      - ["P20_MOAGEM", "μm"]
+      - ["P99_MOAGEM", "μm"]
+    Hidrodinâmica: 
+      - ["FLOT_AL_MASSA", "t"]
+    Característica/Condição:
+      - ["ALIM_FLOT_CU_TOT", "%"]
+  Flotação Rougher 1:
+    Regulador:
+      - ["PH_ROUGHER_COND", "pH"]
+    Hidrodinâmica:
+      - ["VAL_DARDO_CD", "%"]
+      - ["VAZAO_AR_ROUGHER_COND", "N.m³/h"]
+      - ["ESPUMA_ROUGHER_COND", "mm"]
+    Termodinâmica:
+      - ["Espumante (g/t)_CD", ""]
+    Característica/Condição:
+      - ["ALIM_FLOT_PER_SOL", "%"]
+      - ["ALIM_FLOT_FE", "%"]
+      - ["ALIM_FLOT_MG", "%"]
+      - ["ALIM_FLOT_NI", "%"]
+    N/A:
+      - ["CONC_ROUG_FC01_CUT", "%"]
+
+Interações:
+  Interações de Variáveis:
+    Interações: []
