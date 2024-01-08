@@ -10,7 +10,7 @@ conda activate sim_flot
 04 - Utilizando o comando "cd", acesse a pasta do sim_flot pelo conda prompt.
 
 05 - Instale as bibliotecas com o comando:
-pip install -r app/requirements.txt
+pip install -r src/requirements.txt
 
 06 - Inicialize o servidor web com o comando abaixo. Após essa etapa, a aplicação poderá ser acessada pelo navegador:
 streamlit run app/Sobre.py

@@ -1,0 +1,74 @@
+train_ebm_model:
+  latest: True
+  hyperparameters_path: /selected_hyperparameters/hyperparameter.json
+run_conformal_nodes: False
+
+model_conc_cd:
+  type: ensemble
+  randomly_dataset_s0: True
+  by_date_dataset_s0: False
+  models:
+    - model: 1
+      type: "ebm"
+      features:
+        [
+          'VAZAO_AR_ROUGHER_COND',
+          'ESPUMA_ROUGHER_COND',
+          'PH_ROUGHER_COND_median',
+          'DEPRESSOR_CD_LH_max',
+          'CAL(g/t)_MOAGEM_median',
+          'AGUA_CAIXA_MOINHO_max',
+          'ALIM_FLOT_FE',
+          'Sulfetado_LG_Fase2_median',
+          'Espumante (g/t)_CD',
+          'Sulfetado_HG_Estoque',
+          'P20_MOAGEM',
+          'CAL_MOINHO_min',
+          'P20_MOAGEM_max',
+          'DEPRESSOR_CD_LH_median',
+          'Sulfetado_LG_Fase2_max',
+          'ALM_MOI_CU_median',
+          'PILHA_PULMAO_max',
+          'Sulfetado_HG_Fase1_max',
+          'P20_MOAGEM_min',
+          'ALIM_FLOT_CU_TOT',
+          'VELOC_BF1_MOINHO_median',
+          'ALM_MOI_CU',
+          'Sulfetado_LG_Fase2',
+          'RAZAO_CU_SOL_median',
+          'CAL_ROUGHER_min',
+          'PRESSAO_HIDROCICLONES_min',
+          'CAL_ROUGHER_max',
+          'DYNAMIC'
+        ]
+    - model: 2
+      type: "ebm"
+      features:
+        [
+          'VAZAO_AR_ROUGHER_COND',
+          'ESPUMA_ROUGHER_COND',
+          'PH_ROUGHER_COND',
+          'CAL(g/t)_MOAGEM',
+          'AGUA_CAIXA_MOINHO',
+          'ALIM_FLOT_FE',
+          'Sulfetado_LG_Fase2',
+          'Espumante (g/t)_CD',
+          'Sulfetado_HG_Estoque',
+          'CAL_MOINHO',
+          'DEPRESSOR_CD_LH',
+          'PILHA_PULMAO',
+          'Sulfetado_HG_Fase1',
+          'P20_MOAGEM',
+          'ALIM_FLOT_CU_TOT',
+          'VELOC_BF1_MOINHO',
+          'ALM_MOI_CU',
+          'RAZAO_CU_SOL',
+          'PRESSAO_HIDROCICLONES',
+          'CAL_ROUGHER'
+        ]
+
+model_rec_global:
+  type: ebm
+  randomly_dataset_s0: True
+  by_date_dataset_s0: False
+

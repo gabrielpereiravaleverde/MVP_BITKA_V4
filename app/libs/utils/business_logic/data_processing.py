@@ -2,6 +2,21 @@ import pandas as pd
 import io
 import streamlit as st
 from typing import Dict, List, Any, Tuple
+import yaml
+import sys
+
+def load_yaml_file(file_path: str = 'app/data/00_metadata/etapas.yaml') -> Dict[str, Any]:
+    with open(file_path, 'r', encoding='utf-8') as file:
+        return yaml.safe_load(file)
+
+def extract_todas_variaveis(data: Dict[str, Any]) -> Dict[str, Dict[str, List[Tuple[str, str]]]]:
+    todas_variaveis = data.get('todas_variaveis', {})
+    etapas: Dict[str, Dict[str, List[Tuple[str, str]]]] = {}
+    for stage, variables in todas_variaveis.items():
+        etapas[stage] = {}
+        for category, vars in variables.items():
+            etapas[stage][category] = [(var[0], var[1]) for var in vars]
+    return etapas
 
 def to_excel(df: pd.DataFrame):
     """
@@ -56,3 +71,38 @@ def import_excel():
     
     return None
 
+def filter_feature_names(feature_names, suffixes = ['_min', '_max', '_median', '_diff_min_max'], exclude_dynamic=True, exclude_ampersand=True):
+    """
+    Filtra os nomes das características removendo sufixos específicos, duplicatas,
+    e opcionalmente excluindo variáveis específicas.
+
+    Args:
+    feature_names (list): Lista de nomes de características.
+    suffixes (list): Lista de sufixos a serem removidos.
+    exclude_dynamic (bool): Se True, exclui a variável "DYNAMIC".
+    exclude_ampersand (bool): Se True, exclui variáveis que contêm "&".
+
+    Returns:
+    list: Lista de nomes de características filtrados.
+    """
+    def remove_suffix(name):
+        for suffix in suffixes:
+            if name.endswith(suffix):
+                return name[:-len(suffix)]
+        return name
+
+    # Remova os sufixos
+    filtered_names = [remove_suffix(name) for name in feature_names]
+
+    # Remova duplicatas
+    filtered_names = list(dict.fromkeys(filtered_names))
+
+    # Exclua a variável "DYNAMIC", se necessário
+    if exclude_dynamic:
+        filtered_names = [name for name in filtered_names if name != "DYNAMIC"]
+
+    # Exclua variáveis que contêm "&", se necessário
+    if exclude_ampersand:
+        filtered_names = [name for name in filtered_names if "&" not in name]
+
+    return filtered_names

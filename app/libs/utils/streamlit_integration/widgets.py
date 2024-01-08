@@ -1,6 +1,31 @@
 import pandas as pd
 import base64
-from libs.utils.business_logic.data_processing import *
+
+import pandas as pd
+import io
+import streamlit as st
+from typing import Dict, List, Any, Tuple
+
+from libs.utils.business_logic import data_processing as bl_dp
+from libs.utils import utils as ut
+
+
+from statistics import median, mean
+
+def calculate_mean(values):
+    return mean(values)
+
+def calculate_min(values):
+    return min(values)
+
+def calculate_max(values):
+    return max(values)
+
+def calculate_median(values):
+    return median(values)
+
+def calculate_diff_min_max(values):
+    return calculate_max(values) - calculate_min(values)
 
 def get_table_download_link(df: pd.DataFrame, tipo: str) -> str:
     """
@@ -23,13 +48,40 @@ def get_table_download_link(df: pd.DataFrame, tipo: str) -> str:
     Excel file. It also uses base64 encoding to generate the link.
     """
 
-    val = to_excel(df)
+    val = bl_dp.to_excel(df)
     b64 = base64.b64encode(val).decode()
     if tipo == "Template":
         return f'<a href="data:application/octet-stream;base64,{b64}" download="template.xlsx">Baixar Template de Planilha para Preencher os Valores das Variáveis</a>'
     if tipo == "Entrada":
         return f'<a href="data:application/octet-stream;base64,{b64}" download="template.xlsx">Baixar Dados de Entrada</a>'
     
+def get_excel_download_link(excel_file: io.BytesIO, file_name: str) -> str:
+    """
+    Gera um link de download para um arquivo Excel.
+    """
+    excel_file.seek(0)
+    b64 = base64.b64encode(excel_file.read()).decode()
+    href = f'<a href="data:application/octet-stream;base64,{b64}" download="{file_name}">Clique aqui para baixar o arquivo: {file_name}</a>'
+    return href
+
+def create_excel_file(feature_names: list) -> io.BytesIO:
+    """
+    Cria um DataFrame de template e o converte para um arquivo Excel em um buffer de memória.
+    """
+    columns = ["Variáveis", "No Horário", "1 Hora atrás", "2 Horas atrás"]
+    data = {col: [] for col in columns}
+    data["Variáveis"] = feature_names
+    for lag_col in columns[1:]:
+        data[lag_col] = [""] * len(feature_names)
+    
+    template_df = pd.DataFrame(data)
+
+    output = io.BytesIO()
+    with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+        template_df.to_excel(writer, index=False)
+    output.seek(0)
+    return output
+
 def render_inputs_for_stage_and_variable_type(
     etapas: Dict[str, Dict[str, list]], 
     key: str, 
@@ -75,25 +127,42 @@ def render_inputs_for_stage_and_variable_type(
                         if isinstance(variable_info, tuple) and len(variable_info) == 2:
                             variable, unit = variable_info
                         else:
-                            continue  # Se não for uma tupla válida, pula esta variável
-
-                        # Pula a variável específica se necessário
-                        if variable == 'CONC_ROUG_FC01_CUT':
                             continue
 
-                        # Formatar o rótulo com ou sem unidade
-                        label = f"{variable} ({unit})" if unit else variable
+                        if variable == 'CONC_ROUG_FC01_CUT':
+                            continue
+                        if variable == 'DYNAMIC':
+                            continue
+                        # Mapping for user-friendly labels
+                        user_friendly_labels = {
+                            'Selected': 'No horário',
+                            'Lag_1hr': '1 hora atrás',
+                            'Lag_2hr': '2 horas atrás'
+                        }
 
-                        # Acessar o valor atual e garantir que é um float
-                        value = float(input_values.get(variable, default_values.get(variable, 0.0)))
+                        cols = st.columns(3)
+                        for i, lag in enumerate(['Selected', 'Lag_1hr', 'Lag_2hr']):
+                            label = f"{variable} ({user_friendly_labels[lag]}) {unit}" if unit else f"{variable} ({user_friendly_labels[lag]})"
+                            widget_key = f"{variable}"
+                            with cols[i]:
+                                # Check and initialize nested dictionary if not exists
+                                if lag not in input_values:
+                                    input_values[lag] = {}
 
-                        # Criar um input para a variável com ou sem unidade
-                        new_value = st.number_input(label, value=value, format="%.2f")
-                        
-                        # Atualizar o valor no estado da sessão
-                        input_values[variable] = new_value
+                                # Default value handling
+                                default_value = default_values.get(widget_key, 0.0)
+                                if widget_key in input_values[lag]:
+                                    value = input_values[lag][widget_key]
+                                else:
+                                    value = default_value
+                                if value is None:
+                                    default_value = default_values.get(widget_key, 0.0)
+                                    value = default_value if default_value is not None else 0.0
 
-    st.session_state[key] = input_values
+                                value = float(value)
+                                new_value = st.number_input(label, value=value,format="%.9f") #,format="%.2f")
+                                input_values[lag][widget_key] = new_value
+
     return input_values
 
 def is_input_changed(current_input_values: Dict[str, Any], key: str) -> bool:

@@ -5,6 +5,7 @@ import pandas as pd
 import re
 import time
 from libs.otimizador.business_logic import *
+import numpy as np
 
 # Inicialização do estado da sessão
 def initialize_state() -> None:
@@ -56,7 +57,7 @@ def display_name(variable_info: tuple) -> str:
         variable_name = variable_name.replace(suffix, "")
     return variable_name
 
-def should_add_variable(variable_info: tuple) -> bool:
+def should_add_variable(variable_info: tuple, decision_variables: list) -> bool:
     """
     Determine if a variable should be added based on its name.
     Expecting a tuple with (variable_name, unit).
@@ -64,25 +65,26 @@ def should_add_variable(variable_info: tuple) -> bool:
     if not isinstance(variable_info, tuple) or len(variable_info) < 1:
         return False
 
-    variable_name = variable_info[0]  # Extrai o nome da variável da tupla
+    variable_name = variable_info[0]  # Extract the variable name from the tuple
 
-    starts_with_conditions = ("VAZAO_AR", "Espumante", "ESPUMA")
+    # Condições de terminação
     ends_with_conditions = ("_lag1", "_lag2", "_sqr2")
 
+    # Verificar se a variável está na lista de variáveis de decisão e não termina com os padrões específicos
     return bool(
-        variable_name.startswith(starts_with_conditions)
+        variable_name in decision_variables
         and not re.search(r'_lag\d+$', variable_name)
         and not variable_name.endswith(ends_with_conditions)
     )
 
-def render_variable_input(variable: str, default_limits: Tuple[float, float]) -> Tuple[float, float]:
+def render_variable_input(variable: str, default_limits: Tuple[float, float],) -> Tuple[float, float]:
     """Render input fields for the variable and return the user's input."""
     format_string = "%.4f" if "DEPRESSOR" in variable else None
     min_value = st.number_input("Limite Inferior", key=f"min_{variable}", value=default_limits[0], format=format_string)
     max_value = st.number_input("Limite Superior", key=f"max_{variable}", value=default_limits[1], format=format_string)
     return min_value, max_value
 
-def render_restriction_inputs(etapas: Dict[str, Dict[str, List[str]]], default_limits: Tuple[float, float], data: pd.DataFrame) -> Dict[str, Tuple[float, float]]:
+def render_restriction_inputs(etapas: Dict[str, Dict[str, List[str]]], decision_variables:list, default_limits: Tuple[float, float], data: pd.DataFrame) -> Dict[str, Tuple[float, float]]:
     """
     Render inputs for setting constraints on optimization variables and collect user-defined restrictions.
     
@@ -104,13 +106,12 @@ def render_restriction_inputs(etapas: Dict[str, Dict[str, List[str]]], default_l
     """
     user_restrictions = {}
     unique_input_variables = set()
-
     for etapa, variable_groups in etapas.items():
         for variable_type, variable_tuples in variable_groups.items():
             for variable_tuple in variable_tuples:
                 variable, _ = variable_tuple  # Extração do nome da variável da tupla
 
-                if should_add_variable(variable_tuple):  # Passando a tupla para a função
+                if should_add_variable(variable_tuple, decision_variables):  # Passando a tupla para a função
                     unique_input_variables.add(variable)
                     with st.expander(f"Configurações para {display_name(variable_tuple)} - Etapa {etapa}"):  # Passando a tupla para a função
                         limits = default_limits
@@ -128,7 +129,9 @@ def render_restriction_inputs(etapas: Dict[str, Dict[str, List[str]]], default_l
     return user_restrictions
 
 def on_optimize_button_click(
+    type_opt: str,
     model: Any, 
+    model_predict: Any, 
     input_values: Union[Dict[str, Any], pd.DataFrame], 
     data: pd.DataFrame, 
     user_defined_restrictions: Dict[str, Any], 
@@ -148,14 +151,15 @@ def on_optimize_button_click(
     computes the best values for the given inputs, and updates the session state
     with the results of the optimization.
     """
-
+    from libs.utils.utils import process_input_data
+    input_values = process_input_data(input_values)
+    
     st.session_state['optimized'] = True
 
     start_time = time.time()
 
-
     # Realiza a otimização
-    best_values = optimize_all_columns(model, input_values, data, user_defined_restrictions, relevant_cols)
+    best_values = optimize_all_columns(model_predict, input_values, data, user_defined_restrictions, relevant_cols, type_opt=type_opt)
     
 
     # Salva os resultados da otimização no st.session_state
@@ -173,13 +177,29 @@ def on_optimize_button_click(
     # Combine the optimized values in best_values with other variables in input_values
     for column in input_values:
         if column not in best_values and not column.endswith('_sqr2'):
-            best_values[column] = input_values[column]
+            # Garantir que apenas um valor único seja adicionado
+            value = input_values[column]
+            if isinstance(value, (pd.Series, np.ndarray, list)):
+                # Se for uma série, array ou lista, pegue o primeiro elemento
+                best_values[column] = value[0]
+            else:
+                # Se for um valor único, adicione diretamente
+                best_values[column] = value
 
     # Convert the best_values dictionary to a DataFrame
     input_df = pd.DataFrame([best_values])
 
     # List the expected features by the model
-    expected_features = model.feature_names_in_
+    params = model_predict.get_params()
+
+    # Extracting features from each estimator in the ensemble
+    all_features = params.get('features', [])
+
+    # Flattening the list of features and removing duplicates
+    expected_features = set(feature for estimator_features in all_features for feature in estimator_features)
+
+    # Converting the set back to a list, if you need it in list format
+    expected_features = list(expected_features)
 
     # List the columns in input_df
     provided_features = input_df.columns
@@ -190,15 +210,16 @@ def on_optimize_button_click(
         # For columns ending with "_sqr2"
         if "_sqr2" in feature:
             base_feature = feature.replace("_sqr2", "")
-
     # Predict using the model
     predictions = model.predict(input_df)
 
-    # Get the predicted value for cu_teor (Adapt based on your model's output)
-    cu_teor = predictions[0]
-
+    # Get the predicted value for cu_teor
+    cu_teor = []
+    cu_teor.append(model_predict.predict(input_df)[0])
+    cu_teor.append(model.predict(input_df)[0][1])
+    cu_teor.append(model.predict(input_df)[0][2])
     # Round the estimated cu_teor value to 2 decimal places
-    cu_teor = round(cu_teor, 2)
+    cu_teor = np.round(cu_teor, 2)
 
     elapsed_time = time.time() - start_time
     st.session_state.update({

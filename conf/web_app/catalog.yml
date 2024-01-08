@@ -1,0 +1,105 @@
+# --------------------------- RAW DATA ---------------------------
+
+metadata:
+  type: json.JSONDataset
+  filepath: conf/base/metadata.json
+
+balanco_de_massas_raw:
+  type: pandas.ExcelDataset
+  filepath: app/data/01_raw_data/balanco_de_massas.xlsx
+  load_args:
+    engine: openpyxl
+    decimal: "."
+    parse_dates: ["DATA"]
+
+blend_raw:
+  type: pandas.ExcelDataset
+  filepath: app/data/01_raw_data/blend.xlsx
+  load_args:
+    engine: openpyxl
+    decimal: "."
+
+carta_controle_pims_raw:
+  type: pandas.ExcelDataset
+  filepath: app/data/01_raw_data/carta_controle_pims.xlsx
+  load_args:
+    engine: openpyxl
+    decimal: "."
+    parse_dates: ["DATA"]
+
+laboratorio_raw:
+  type: pandas.ExcelDataset
+  filepath: app/data/01_raw_data/laboratorio.xlsx
+  load_args:
+    engine: openpyxl
+    decimal: "."
+    parse_dates: ["DATA"]
+
+laboratorio_raiox_raw:
+  type: pandas.ExcelDataset
+  filepath: app/data/01_raw_data/laboratorio_raiox.xlsx
+  load_args:
+    engine: openpyxl
+    decimal: "."
+    parse_dates: ["DATA"]
+
+reagentes_raw:
+  type: pandas.ExcelDataset
+  filepath: app/data/01_raw_data/reagentes.xlsx
+  load_args:
+    engine: openpyxl
+    decimal: "."
+    skiprows: 4
+    header: [0, 1]
+
+# --------------------------- PRE-PROCESSED DATA ---------------------------
+
+carta_controle_pims_pre:
+  type: pandas.ParquetDataset
+  filepath: app/data/02_intermediate/carta_controle_pims_pre.pq
+
+balanco_de_massas_pre:
+  type: pandas.ParquetDataset
+  filepath: app/data/02_intermediate/balanco_de_massas_pre.pq
+
+laboratorio_raiox_pre:
+  type: pandas.ParquetDataset
+  filepath: app/data/02_intermediate/laboratorio_raiox_pre.pq
+
+laboratorio_pre:
+  type: pandas.ParquetDataset
+  filepath: app/data/02_intermediate/laboratorio_pre.pq
+
+reagentes_pre:
+  type: pandas.ParquetDataset
+  filepath: app/data/02_intermediate/reagentes_pre.pq
+
+blend_pre:
+  type: pandas.ParquetDataset
+  filepath: app/data/02_intermediate/blend_pre.pq
+
+# --------------------------- PRIMARY DATA ---------------------------
+
+merged_raw_data:
+  type: pandas.ParquetDataset
+  filepath: app/data/03_primary/merged_raw_data.pq
+
+hourly_data:
+  type: pandas.ParquetDataset
+  filepath: app/data/03_primary/hourly_data.pq
+
+# --------------------------- PARAMETERS ---------------------------
+
+params_data_processing:
+  type: yaml.YAMLDataset
+  filepath: app/conf/base/parameters_data_processing.yml
+
+# --------------------------- MODELS ---------------------------
+
+conformal_model_conc_cd_randomly:
+  type: pickle.PickleDataset
+  filepath: app/data/04_models/conformal_model_conc_cd_randomly.pickle
+
+ebm_conc_cd_randomly:
+  type: pickle.PickleDataset
+  filepath: app/data/04_models/ebm_conc_cd_randomly.pickle

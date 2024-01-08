@@ -8,17 +8,14 @@ from pathlib import Path
 import sys 
 
 sys.path.append(str(Path("./").resolve()))
-print(sys.path)
+sys.path.append(str(Path("./src").resolve()))
 
 # Constants
 CURRENT_FILE_PATH = os.path.abspath(__file__)
 BASE_PATH = os.path.dirname(CURRENT_FILE_PATH)
 CATALOG_PATH = os.path.join(BASE_PATH, "catalog.yml")
 
-st.set_page_config(
-    page_title="Sobre",
-    page_icon=":information_source:"
-)
+st.set_page_config(page_title="Sobre", layout="wide", page_icon=":information_source:")
 
 image = Image.open("app/ícones/mvv.jpg")
 
@@ -37,6 +34,6 @@ st.markdown("<hr>", unsafe_allow_html=True)
 
 st.markdown(
     """
-**Versão:** **MVP 0.4.0**
+**Versão:** **MVP 1.0.1**
 """
 )

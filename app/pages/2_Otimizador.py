@@ -12,45 +12,34 @@ import re
 from libs.otimizador.otimizador import *
 from libs.utils.utils import *
 import copy
-import libs.otimizador.optimizer as opt
-
-# Definição das etapas
-etapas = {
-    "Moagem e Classificação": {
-        "Blend": [('Sulfetado_HG', '%'), ('Sulfetado_LG', '%'), ('Sulfetado_MG', '%'), ('Sulfetado_SHG', '%')],
-        "Granulometria": [('PSI_OVER_CICLO', 'μm'), ('P20_MOAGEM', 'μm'), ('P99_MOAGEM', 'μm')],
-        "Hidrodinâmica": [('FLOT_AL_MASSA', 't')],
-        "Característica/Condição": [('ALIM_FLOT_CU_TOT', '%')]
-    },
-    "Flotação Rougher 1": {
-        "Regulador": [('PH_ROUGHER_COND', 'pH')],
-        "Hidrodinâmica": [('VAL_DARDO_CD', '%'), ('VAZAO_AR_ROUGHER_COND', 'N.m³/h'), ('ESPUMA_ROUGHER_COND', 'mm')],
-        "Termodinâmica": [('Espumante (g/t)_CD', '')],
-        "Característica/Condição": [('ALIM_FLOT_PER_SOL', '%'), ('ALIM_FLOT_FE', '%'), ('ALIM_FLOT_MG', '%'), ('ALIM_FLOT_NI', '%')],
-        "N/A": [('CONC_ROUG_FC01_CUT', '%')]
-    }
-}
+from src.mvvflotacao.shared_code.modeling import ConformalModel, Ensemble, Explaining
 
 # Configurações da página
 st.set_page_config(
     page_title="Otimizador",
+    layout='wide',
     page_icon=":gear:",
 )
 
 catalog = load_catalog_config()
 
-data = catalog.load("conc_cd_full_data")
-model = catalog.load("ebm_conc_cd")
+data = catalog.load("hourly_data")
+data_copy = data[[c for c in data.columns if c != 'CONC_ROUG_FC01_CUT']].copy()
+data_copy.set_index('DATA', inplace=True)
+data_copy.sort_index(inplace=True)
+model = catalog.load("conformal_model_conc_cd_randomly")
+model_predict = catalog.load("ebm_conc_cd_randomly")
+model = model['model']
+model_predict = model_predict['model']
 
 # Colunas relevantes
-relevant_cols = [col for col in data.columns if col.startswith(("VAZAO_AR_ROUGHER", "Espumante", "ESPUMA")) and not re.search(r'_lag\d+$', col) and not col.endswith('_sqr2')]
 
 # Configuração da interface
 image = Image.open("app/ícones/mvv.jpg")
 col1, col2 = st.columns([3, 1])
 
 with col1:
-    st.title("Otimizador da Flotação do Concentrado de Cobre")
+    st.title("Otimizador da Flotação do Concentrado de Cobre na CD")
 
 with col2:
     st.image(image, width=150)
@@ -59,9 +48,25 @@ st.markdown("<hr>", unsafe_allow_html=True)
 
 initialize_state()
 
-data_copy = data[[c for c in data.columns if c != 'target']].copy()
-target_copy = data['target'].copy()
-input_values_optimizer = render_tabs(data_copy, target_copy, etapas, 'input_values_optimizer')
+model_variables = model.explain_global().columns
+
+with open('app/data/00_metadata/etapas.yaml', encoding='utf-8') as file:
+    yaml_data = yaml.safe_load(file)
+
+etapas = generate_variable_dict(model_variables, yaml_data, include_all=True)
+
+result_dict = generate_variable_dict(model_variables, yaml_data, include_all=False)
+
+decision_variables = []
+for category in result_dict.values():
+    for subcategory in category.values():
+        for var_info in subcategory:
+            decision_variables.append(var_info[0])  # Adiciona apenas o nome da variável
+
+relevant_cols = [col for col in data.columns if col in decision_variables and not re.search(r'_lag\d+$', col) and not col.endswith('_sqr2')]
+
+target_copy = data['CONC_ROUG_FC01_CUT'].copy()
+input_values_optimizer = render_tabs(data_copy, target_copy, etapas, 'input_values_optimizer', model)
 
 if 'initial_input_values_optimizer' not in st.session_state:
     st.session_state['initial_input_values_optimizer'] = copy.deepcopy(input_values_optimizer)
@@ -93,10 +98,11 @@ with tab_objetivo:
         objective_type = "recup_metal"
 
 # Seção de Restrições (Dosagem)
+
 with tab_restricoes:
-    output_variables = [col for col in data.columns if col.startswith(("VAZAO_AR_ROUGHER", "Espumante", "ESPUMA")) and not re.search(r'_lag\d+$', col) and not col.endswith('_sqr2')]
+    output_variables = [col for col in data.columns if col in decision_variables and not re.search(r'_lag\d+$', col) and not col.endswith('_sqr2')]
     default_limits = (0.0, 30.0)
-    user_defined_restrictions = render_restriction_inputs(etapas, default_limits, data)
+    user_defined_restrictions = render_restriction_inputs(etapas, decision_variables, default_limits, data)
 
     
 recup_metal = None
@@ -108,18 +114,14 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-etapas = {
-    "Flotação Rougher 1": {
-        "Termodinâmica": [('Espumante (g/t)_CD', 'g/t')],
-        "Hidrodinâmica": [('VAZAO_AR_ROUGHER_COND', 'N.m³/h'), ('ESPUMA_ROUGHER_COND', 'mm')],
-        "N/A": [('CONC_ROUG_FC01_CUT', '%')]
-    }
-}
+etapas = generate_variable_dict(model_variables, yaml_data, include_all=False)
 
 if 'input_values_optimizer' in st.session_state and st.session_state['input_values_optimizer'] == st.session_state['initial_input_values_optimizer']:
     st.warning("Nenhuma variável foi alterada.")
 
-st.button("Otimizar", on_click = on_optimize_button_click, args = (model, copy.deepcopy(st.session_state.input_values_optimizer), data, copy.deepcopy(user_defined_restrictions), relevant_cols.copy()))
+type_opt = yaml_data['otimizador'][0][0]
+
+st.button("Otimizar", on_click = on_optimize_button_click, args = (type_opt, model, model_predict, copy.deepcopy(st.session_state.input_values_optimizer), data, copy.deepcopy(user_defined_restrictions), relevant_cols.copy()))
 
 # Renderize os resultados da otimização se estiverem disponíveis
 if st.session_state.get('optimization_results'):
@@ -136,7 +138,8 @@ if st.session_state.get('optimization_results'):
     results_df = create_optimization_results_df(st.session_state['input_values_optimizer'], 
                                             st.session_state.get('optimization_results', {}), 
                                             user_defined_restrictions,
-                                            st.session_state.cu_teor)
+                                            st.session_state.cu_teor,
+                                            model_variables)
 
     excel_data = to_excel_download_link(results_df)
 

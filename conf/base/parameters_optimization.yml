@@ -1,0 +1,33 @@
+# This is a boilerplate parameters config generated for pipeline 'optimization'
+# using Kedro 0.18.14.
+#
+# Documentation for this file format can be found in "Parameters"
+# Link: https://docs.kedro.org/en/0.18.14/configuration/parameters.html
+
+conc_cd_opt_sim_params:
+  gs_steps: 100
+  bayesian_max_time: 4
+  bayesian_max_it: 4000
+  scenario_features:
+    - ALIM_FLOT_CU_TOT
+    - PH_ROUGHER_COND
+    - P20_MOAGEM
+  decision_variables:
+    - VAZAO_AR_ROUGHER_COND
+    - Espumante (g/t)_CD
+    - ESPUMA_ROUGHER_COND
+
+rec_global_opt_sim_params:
+  gs_steps: 30
+  bayesian_max_time: 6
+  bayesian_max_it: 4000
+  scenario_features:
+    - ALIM_FLOT_CU_TOT
+    - PH_ROUGHER_COND
+    - P20_MOAGEM
+  decision_variables:
+    - Espumante (g/t)_CD
+    - Coletor 2 (g/t)_FC-05
+    - VAZAO_AR_CLEA_1_FC_CLEANER_1
+    - VAZAO_AR_CLEA_2_FC_CLEANER_2
+    - Coletor 1 (g/t)_ALM-SCV

@@ -1,0 +1,322 @@
+{
+    "CY1_HIG1": {
+        "carta_controle_pims": [
+            "DENSIDADE_ALIM_CY_I",
+            "DENS_ALIM_HIGMILL_I",
+            "POTENCIA_HIGMILL_I",
+            "POT_ESP_HIGMILL_I",
+            "PRESSAO_HC_HIG_1",
+            "TORQUE_HIGMILL_I",
+            "VAZAO_ALIM_CY_I",
+            "VAZAO_ALIM_SOL_HIG_1"
+        ]
+    },
+    "CY2_HIG2": {
+        "carta_controle_pims": [
+            "DENSIDADE_ALIM_CY_II",
+            "DENS_ALIM_HIGMILL_II",
+            "POTENCIA_HIGMILL_II",
+            "POT_ESP_HIGMILL_II",
+            "PRESSAO_HC_HIG_2",
+            "TEMP_ALIM_HIG_2",
+            "TEMP_DESCARGA_HIG_2",
+            "VAZAO_ALIM_CY_II",
+            "VAZAO_ALIM_SOL_HIG_2",
+            "VELOC_HIG_2_MS",
+            "VELOC_HIG_2_RPM",
+            "VIBRACAO_ENTRADA_HIG_2",
+            "VIBRACAO_VERTICAL_HIG_2"
+        ]
+    },
+    "cleaner_1": {
+        "carta_controle_pims": [
+            "ABERT_VAL_FC_007",
+            "ABERT_VAL_FC_008",
+            "ABERT_VAL_FC_009",
+            "CAL_CLEANER_I",
+            "GHU_CLEANER_I_FC_07",
+            "GHU_CLEANER_I_FC_08",
+            "PH_CLEANER_I",
+            "PRESSAO_ALIM_CL1",
+            "QgQs_CLEANER_I",
+            "VAL_DESC_CLEANER_I_MV",
+            "VAZAO_AR_CLEA_1_FC_07",
+            "VAZAO_AR_CLEA_1_FC_08",
+            "VAZAO_AR_CLEA_1_FC_09"
+        ],
+        "laboratorio": [
+            "REJ_CLEA_I_CU_TOT"
+        ],
+        "reagentes": [
+            "Coletor 2 (g/t)_ALM.CL1"
+        ]
+    },
+    "cleaner_2": {
+        "carta_controle_pims": [
+            "ABERT_VAL_FC_010",
+            "ABERT_VAL_FC_011",
+            "ABERT_VAL_FC_012",
+            "ABERT_VAL_FC_013",
+            "DEPRESSOR_FC10_LH",
+            "GHU_CLEANER_II_FC_10",
+            "GHU_CLEANER_II_FC_11",
+            "GHU_CLEANER_II_FC_12",
+            "GHU_CLEANER_II_FC_13",
+            "PH_CLEANER_II",
+            "PRESSAO_ALIM_CL2",
+            "QgQs_CLEANER_II",
+            "VAL_DESC_CLEANER_II_MV",
+            "VAZAO_AR_CLEA_2_FC_10",
+            "VAZAO_AR_CLEA_2_FC_11",
+            "VAZAO_AR_CLEA_2_FC_12",
+            "VAZAO_AR_CLEA_2_FC_13"
+        ],
+        "laboratorio": [
+            "CONC_CLEA_II_PER_SOL",
+            "REJ_CLEA_II_CU_TOT"
+        ],
+        "laboratorio_raiox": [
+            "CONC_CLEA_II_CU_TOT"
+        ],
+        "reagentes": [
+            "CMC (g/t)_ALM.CL2"
+        ]
+    },
+    "cleaner_scavenger": {
+        "carta_controle_pims": [
+            "ABERT_VAL_FC_014",
+            "ABERT_VAL_FC_015",
+            "ABERT_VAL_FC_016",
+            "ABERT_VAL_FC_017",
+            "ABERT_VAL_FC_018",
+            "DEPRESSOR_FC14_LH",
+            "GHU_SCAV_CLEANER_FC_14",
+            "GHU_SCAV_CLEANER_FC_15",
+            "GHU_SCAV_CLEANER_FC_16",
+            "GHU_SCAV_CLEANER_FC_17",
+            "GHU_SCAV_CLEANER_FC_18",
+            "PRESSAO_ALIM_CL_SCV",
+            "QG_QS_CL_SCV_PV",
+            "QgQs_CLEANER_SCV",
+            "QgQs_CLEANER_SCV_SP",
+            "VAL_DESC_CLEANER_SCV_MV",
+            "VAZAO_AR_SC_FC_14",
+            "VAZAO_AR_SC_FC_15",
+            "VAZAO_AR_SC_FC_16",
+            "VAZAO_AR_SC_FC_17",
+            "VAZAO_AR_SC_FC_18"
+        ],
+        "laboratorio": [
+            "REJ_CLEA_I_CU_TOT",
+            "REJ_SC_CL_CU_TOT"
+        ],
+        "laboratorio_raiox": [
+            "CONC_SC_CL_CU_TOT"
+        ],
+        "reagentes": [
+            "Coletor 1 (g/t)_ALM-SCV"
+        ]
+    },
+    "espessador_de_concentrado": {
+        "balanco_de_massas": [
+            "FLOT_CF_AC_MASSA",
+            "FLOT_CF_MASSA",
+            "FLOT_CF_TEOR_AC_CUT",
+            "FLOT_CF_TEOR_AC_FE",
+            "FLOT_CF_TEOR_AC_MG",
+            "FLOT_CF_TEOR_AC_NI",
+            "FLOT_CF_TEOR_AC_S",
+            "FLOT_CF_TEOR_AG",
+            "FLOT_CF_TEOR_CUT",
+            "FLOT_CF_TEOR_FE",
+            "FLOT_CF_TEOR_MG",
+            "FLOT_CF_TEOR_NI",
+            "FLOT_CF_TEOR_S",
+            "REC_FLOT_AC_AG",
+            "REC_FLOT_AC_AU",
+            "REC_FLOT_AC_CU",
+            "REC_FLOT_AC_FE",
+            "REC_FLOT_AC_MG",
+            "REC_FLOT_AC_NI",
+            "REC_FLOT_AC_S",
+            "REC_FLOT_AG",
+            "REC_FLOT_AU",
+            "REC_FLOT_CU",
+            "REC_FLOT_FE",
+            "REC_FLOT_MG",
+            "REC_FLOT_NI",
+            "REC_FLOT_S"
+        ],
+        "carta_controle_pims": [
+            "DENSIDADE_UF_ESPESSADOR_CONC",
+            "FLOCULANTE_ESPESSADOR_CONC",
+            "TORQUE_ESPESSADOR_CONC",
+            "VAZAO_SOL_UF_ESPESSADOR_CONC"
+        ],
+        "laboratorio": [
+            "CONC_FLOT_AG",
+            "CONC_FLOT_CU_SOL",
+            "CONC_FLOT_CU_TOT",
+            "CONC_FLOT_FE",
+            "CONC_FLOT_MG",
+            "CONC_FLOT_NI",
+            "CONC_FLOT_PER_SOL",
+            "CONC_FLOT_S",
+            "REJ_FLOT_CU_TOT"
+        ],
+        "reagentes": [
+            "FLOCULANTE (g/t)_ESP. DE CONC.",
+            "FLOCULANTE (g/t)_ESP. DE REJ."
+        ]
+    },
+    "moagem": {
+        "balanco_de_massas": [
+            "FLOT_AL_MASSA",
+            "PILHA_PULMAO"
+        ],
+        "carta_controle_pims": [
+            "AGUA_CAIXA_MOINHO",
+            "AGUA_MOINHO",
+            "CAL_MOINHO",
+            "CAL_MOINHO_Lh",
+            "DENS_ALIM_CY_MOINHO",
+            "P20_MOAGEM",
+            "P99_MOAGEM",
+            "POTENCIA_SOMA_MOINHO",
+            "PRESSAO_HIDROCICLONES",
+            "PSI_OVER_CICLO",
+            "VELOC_BF1_MOINHO"
+        ],
+        "laboratorio": [
+            "ALIM_FLOT_CU_SOL",
+            "ALIM_FLOT_CU_TOT",
+            "ALM_MOI_CU",
+            "RAZAO_CU_SOL"
+        ],
+        "laboratorio_raiox": [
+            "ALIM_MOINHO_FE",
+            "ALIM_MOINHO_MG",
+            "ALIM_MOINHO_NI"
+        ],
+        "reagentes": [
+            "CAL(g/t)_MOAGEM"
+        ]
+    },
+    "rougher_1": {
+        "balanco_de_massas": [
+            "FLOT_AL_MASSA"
+        ],
+        "carta_controle_pims": [
+            "CAL_ROUGHER",
+            "CAL_ROUGHER_Lh",
+            "DEPRESSOR_CD_LH",
+            "ESPUMA_ROUGHER_COND",
+            "ESPUMA_ROUGHER_FC_01",
+            "PH_ROUGHER_COND",
+            "PSI_OVER_CICLO",
+            "VAL_DARDO_CD",
+            "VAL_DARDO_FC_001",
+            "VAZAO_AR_ROUGHER_COND",
+            "VAZAO_AR_ROUGHER_FC_01"
+        ],
+        "laboratorio": [
+            "ALIM_FLOT_CU_TOT",
+            "ALIM_FLOT_PER_SOL",
+            "REJ_RG_CD_CU_TOT"
+        ],
+        "laboratorio_raiox": [
+            "ALIM_FLOT_FE",
+            "ALIM_FLOT_MG",
+            "ALIM_FLOT_NI",
+            "CONC_ROUG_FC01_CUT",
+            "CONC_ROUG_FC01_FE",
+            "CONC_ROUG_FC01_MG",
+            "CONC_ROUG_FC01_NI",
+            "CONC_ROUG_FC01_PER_SOL",
+            "CONC_ROUG_FC01_SIO2"
+        ],
+        "reagentes": [
+            "CMC (g/t)_CD",
+            "Coletor 1 (g/t)_FC-01",
+            "Espumante (g/t)_CD"
+        ]
+    },
+    "rougher_2": {
+        "carta_controle_pims": [
+            "ESPUMA_ROUGHER_FC_02",
+            "ESPUMA_ROUGHER_FC_04",
+            "SP_COLET_II_ROUGHER_FC_03",
+            "SP_COLET_I_ROUGHER_FC_03",
+            "SP_ESP_ROUGHER_FC_03",
+            "VAL_DARDO_FC_002",
+            "VAL_DARDO_FC_004",
+            "VAZAO_AR_ROUGHER_FC_02",
+            "VAZAO_AR_ROUGHER_FC_03",
+            "VAZAO_AR_ROUGHER_FC_04"
+        ],
+        "laboratorio": [
+            "REJ_RG_FC4_PER_SOL"
+        ],
+        "reagentes": [
+            "Coletor 1 (g/t)_FC-02",
+            "Coletor 2 (g/t)_FC-03",
+            "Espumante (g/t)_FC-02"
+        ]
+    },
+    "rougher_3": {
+        "carta_controle_pims": [
+            "COLET_II_ROUGHER_FC_05_Lh",
+            "ESPUMA_ROUGHER_FC_06",
+            "PH_ROUGHER_CF_06",
+            "VAL_DARDO_FC_006",
+            "VAZAO_AR_ROUGHER_FC_05",
+            "VAZAO_AR_ROUGHER_FC_06"
+        ],
+        "laboratorio": [
+            "REJ_ROUG_CU_TOT",
+            "REJ_ROUG_FE",
+            "REJ_ROUG_MG",
+            "REJ_ROUG_NI",
+            "REJ_ROUG_PER_SOL",
+            "REJ_ROUG_S"
+        ],
+        "reagentes": [
+            "Coletor 2 (g/t)_FC-05"
+        ]
+    },
+    "ROM": {
+        "blend": [
+            "Sulfetado_LG", 
+            "Sulfetado_HG", 
+            "Sulfetado_MG", 
+            "Sulfetado_SHG",
+            "Sulfetado_HG_Estoque",
+            "Sulfetado_LG_Estoque",
+            "Sulfetado_MG_Estoque",
+            "Sulfetado_SHG_Estoque",
+            "Sulfetado_HG_Fase1",
+            "Sulfetado_MG_Fase1",
+            "Sulfetado_SHG_Fase1",
+            "Sulfetado_HG_Fase2",
+            "Sulfetado_LG_Fase2",
+            "Sulfetado_MG_Fase2"
+        ]
+    },
+    "new_features": {
+        "new_features": [
+            "ABERT_VAL_FC_CLEANER_1",
+            "GHU_CLEANER_I_FC_CLEANER_1",
+            "VAZAO_AR_CLEA_1_FC_CLEANER_1",
+            "ABERT_VAL_FC_CLEANER_2",
+            "GHU_CLEANER_II_FC_CLEANER_2",
+            "VAZAO_AR_CLEA_2_FC_13",
+            "ABERT_VAL_FC_CLEANER_SCAV",
+            "GHU_SCAV_CLEANER_FC_CLEANER_SCAV",
+            "VAZAO_AR_SC_FC_CLEANER_SCAV",
+            "ESPUMA_ROUGHER_FC_ROUGHER_2",
+            "VAL_DARDO_FC_ROUGHER_2",
+            "VAZAO_AR_ROUGHER_FC_ROUGHER_2",
+            "VAZAO_AR_ROUGHER_FC_ROUGHER_3"
+        ]
+    }
+}

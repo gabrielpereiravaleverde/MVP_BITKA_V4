@@ -1,12 +1,14 @@
 import pandas as pd 
 import numpy as np
+import yaml
 from pathlib import Path
 import os
-from optimizer import *
-from simulation import *
+from optimization.optimizer import *
+from optimization.simulation import *
 import yaml
 from kedro.io import DataCatalog
 import pickle
+from libs.utils.utils import *
 
 def testing_gridsearch(cols, data):
     fixed_data = data.drop(columns = cols + ['target']).sample(n = 1)
@@ -44,13 +46,21 @@ if __name__ == "__main__":
 
     data = catalog.load("conc_cd_full_data")
     model = catalog.load("ebm_conc_cd")
+    with open('app/data/00_metadata/etapas.yaml', encoding='utf-8') as file:
+        yaml_data = yaml.safe_load(file)
+    model_variables = model.explain_global().columns
 
-    cols = ['VAZAO_AR_ROUGHER_COND', "Espumante (g/t)_CD", "ESPUMA_ROUGHER_COND"]
+    result_dict = generate_variable_dict(model_variables, yaml_data, include_all=False)
+    decision_variables = []
+    for category in result_dict.values():
+        for subcategory in category.values():
+            for var_info in subcategory:
+                decision_variables.append(var_info[0])  # Adiciona apenas o nome da variável
 
     print("Gridsearch testing...")
-    print(testing_gridsearch(cols, data))
+    print(testing_gridsearch(decision_variables, data))
     print()
 
     print("Bayesian Opt testing...")
-    print(testing_bayesian(cols, data))
+    print(testing_bayesian(decision_variables, data))
     print()

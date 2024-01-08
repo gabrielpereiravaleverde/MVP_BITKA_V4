@@ -1,0 +1,4 @@
+split_data:
+  test_size: 0.15
+
+measures: ["min", "max", "median", "diff_min_max"]

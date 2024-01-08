@@ -13,31 +13,55 @@ todas_variaveis:
       - ["Sulfetado_LG", "%"]
       - ["Sulfetado_MG", "%"]
       - ["Sulfetado_SHG", "%"]
+      - ["Sulfetado_LG_Estoque", "%"]
+      - ["Sulfetado_MG_Estoque", "%"]
+      - ["Sulfetado_HG_Estoque", "%"]
+      - ["Sulfetado_SHG_Estoque", "%"]
+      - ["Sulfetado_HG_Fase1", "%"]
+      - ["Sulfetado_LG_Fase1", "%"]
+      - ["Sulfetado_MG_Fase1", "%"]
+      - ["Sulfetado_SHG_Fase1", "%"]
+      - ["Sulfetado_HG_Fase2", "%"]
+      - ["Sulfetado_LG_Fase2", "%"]
+      - ["Sulfetado_MG_Fase2", "%"]
+      - ["Sulfetado_SHG_Fase2", "%"]
     Granulometria: 
       - ["PSI_OVER_CICLO", "μm"]
       - ["P20_MOAGEM", "μm"]
       - ["P99_MOAGEM", "μm"]
     Hidrodinâmica: 
       - ["FLOT_AL_MASSA", "t"]
+      - ["AGUA_CAIXA_MOINHO", "m³/h"]
+      - ["PRESSAO_HIDROCICLONES_min", "kgf/cm²"]
+    Operação:
+      - ["VELOC_BF1_MOINHO", "t/h"]
     Característica/Condição:
-      - ["ALIM_FLOT_CU_TOT", "%"]
+      - ["ALM_MOI_CU", "%"]
+      - ["PILHA_PULMAO_max", "m"]
+    Regulador:
+      - ["CAL(g/t)_MOAGEM", ""]
+      - ["CAL_MOINHO", "(L/h)"]
   Flotação Rougher 1:
     Regulador:
       - ["PH_ROUGHER_COND", "pH"]
+      - ["CAL_ROUGHER", "(L/h)"]
     Hidrodinâmica:
       - ["VAL_DARDO_CD", "%"]
       - ["VAZAO_AR_ROUGHER_COND", "N.m³/h"]
       - ["ESPUMA_ROUGHER_COND", "mm"]
     Termodinâmica:
       - ["Espumante (g/t)_CD", ""]
+      - ["DEPRESSOR_CD_LH", "L/h"]
     Característica/Condição:
+      - ["ALIM_FLOT_CU_TOT", "%"]
       - ["ALIM_FLOT_PER_SOL", "%"]
       - ["ALIM_FLOT_FE", "%"]
       - ["ALIM_FLOT_MG", "%"]
       - ["ALIM_FLOT_NI", "%"]
+      - ["RAZAO_CU_SOL_median", "%"]
+      - ["DYNAMIC", ""]
     N/A:
       - ["CONC_ROUG_FC01_CUT", "%"]
 
-Interações:
-  Interações de Variáveis:
-    Interações: []
+otimizador:
+  - ["Bayesian"]

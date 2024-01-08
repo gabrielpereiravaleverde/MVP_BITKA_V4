@@ -1,0 +1,4 @@
+optimize_ebm_model:
+  load_trials: False
+  max_iter: 10
+  save_iter: 1

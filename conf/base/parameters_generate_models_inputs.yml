@@ -1,0 +1,180 @@
+generate_dataset_for_conc_cd:
+  target: "CONC_ROUG_FC01_CUT"
+  remove_outliers:
+    train: True
+    test: False
+  lag: False
+  diff_lag: False
+  filter_val_dardo_cd: True
+  dropna: True
+  remove_0_values: True
+  measures: ['min','max','median','diff_min_max']
+  features:
+    [
+      'DEPRESSOR_CD_LH',
+      'Sulfetado_MG_Estoque',
+      'VELOC_BF1_MOINHO',
+      'ALIM_MOINHO_MG',
+      'PRESSAO_HIDROCICLONES',
+      'ALIM_FLOT_CU_TOT',
+      'Sulfetado_SHG_Fase1',
+      'DENS_ALIM_CY_MOINHO',
+      'RAZAO_CU_SOL',
+      'Sulfetado_HG_Estoque',
+      'P99_MOAGEM',
+      'PSI_OVER_CICLO',
+      'ALIM_MOINHO_FE',
+      'CAL_MOINHO',
+      'VAZAO_AR_ROUGHER_COND',
+      'Sulfetado_HG_Fase1',
+      'ALIM_FLOT_PER_SOL',
+      'Sulfetado_HG_Fase2',
+      'ALIM_FLOT_NI',
+      'PILHA_PULMAO',
+      'ALIM_FLOT_FE',
+      'AGUA_CAIXA_MOINHO',
+      'AGUA_MOINHO',
+      'ALIM_MOINHO_NI',
+      'CAL(g/t)_MOAGEM',
+      'ALIM_FLOT_CU_SOL',
+      'Sulfetado_SHG_Estoque',
+      'Sulfetado_MG_Fase1',
+      'Sulfetado_MG_Fase2',
+      'ALM_MOI_CU',
+      'VAL_DARDO_CD',
+      'P20_MOAGEM',
+      'FLOT_AL_MASSA',
+      'CAL_ROUGHER',
+      'CAL_ROUGHER_Lh',
+      'POTENCIA_SOMA_MOINHO',
+      'Sulfetado_LG_Fase2',
+      'CAL_MOINHO_Lh',
+      'ESPUMA_ROUGHER_COND',
+      'ALIM_FLOT_MG',
+      'Espumante (g/t)_CD',
+      'Sulfetado_LG_Estoque',
+      'PH_ROUGHER_COND',
+      'Sulfetado_LG',
+      'Sulfetado_HG',
+      'Sulfetado_MG',
+      'Sulfetado_SHG'
+    ]
+  dynamic_feature: 
+    [
+      '2023-07-03T03:00:00.000000000', 
+      '2023-07-11T21:00:00.000000000',
+      '2023-07-25T15:00:00.000000000',
+      '2023-08-03T09:00:00.000000000',
+      '2023-08-27T03:00:00.000000000', 
+      '2023-10-23T15:00:00.000000000',
+      '2023-12-17T21:00:00.000000000'
+    ]
+
+generate_dataset_for_rec_global:
+  target: "REC_FLOT_CU"
+  remove_outliers:
+    train: True
+    test: False
+  lag: False
+  diff_lag: False
+  measures: []
+  features:
+    [
+      #rougher 1
+      "FLOT_AL_MASSA",
+      "CAL_ROUGHER",
+      "CAL_ROUGHER_Lh",
+      "DEPRESSOR_CD_LH",
+      "ESPUMA_ROUGHER_COND",
+      "ESPUMA_ROUGHER_FC_01",
+      "PH_ROUGHER_COND",
+      "PSI_OVER_CICLO",
+      "VAL_DARDO_CD",
+      "VAL_DARDO_FC_001",
+      "VAZAO_AR_ROUGHER_COND",
+      "VAZAO_AR_ROUGHER_FC_01",
+      "ALIM_FLOT_CU_TOT",
+      "ALIM_FLOT_PER_SOL",
+      "ALIM_FLOT_FE",
+      "ALIM_FLOT_MG",
+      "ALIM_FLOT_NI",
+      "Coletor 1 (g/t)_FC-01",
+      "Espumante (g/t)_CD",
+      #rougher 2
+      "ESPUMA_ROUGHER_FC_ROUGHER_2",
+      # "SP_COLET_II_ROUGHER_FC_03",
+      "SP_COLET_I_ROUGHER_FC_03",
+      # "SP_ESP_ROUGHER_FC_03",
+      "VAL_DARDO_FC_ROUGHER_2",
+      "VAZAO_AR_ROUGHER_FC_ROUGHER_2",
+      "Coletor 1 (g/t)_FC-02",
+      "Coletor 2 (g/t)_FC-03",
+      "Espumante (g/t)_FC-02",
+      #rougher 3
+      "COLET_II_ROUGHER_FC_05_Lh",
+      "ESPUMA_ROUGHER_FC_06",
+      "VAL_DARDO_FC_006",
+      "VAZAO_AR_ROUGHER_FC_ROUGHER_3",
+      "Coletor 2 (g/t)_FC-05",
+      #moagem
+      # "FLOT_AL_MASSA",
+      "PILHA_PULMAO",
+      "AGUA_CAIXA_MOINHO",
+      "AGUA_MOINHO",
+      "CAL_MOINHO",
+      "CAL_MOINHO_Lh",
+      "DENS_ALIM_CY_MOINHO",
+      "P20_MOAGEM",
+      "P99_MOAGEM",
+      "POTENCIA_SOMA_MOINHO",
+      "PRESSAO_HIDROCICLONES",
+      # "PSI_OVER_CICLO",
+      "ALIM_FLOT_CU_SOL",
+      # "ALIM_FLOT_CU_TOT",
+      "ALM_MOI_CU",
+      "RAZAO_CU_SOL",
+      "ALIM_MOINHO_FE",
+      "ALIM_MOINHO_MG",
+      "ALIM_MOINHO_NI",
+      "CAL(g/t)_MOAGEM",
+      #cleaner 1
+      "ABERT_VAL_FC_CLEANER_1",
+      "GHU_CLEANER_I_FC_CLEANER_1",
+      "PH_CLEANER_I",
+      "PRESSAO_ALIM_CL1",
+      "QgQs_CLEANER_I",
+      "VAL_DESC_CLEANER_I_MV",
+      "VAZAO_AR_CLEA_1_FC_CLEANER_1",
+      "Coletor 2 (g/t)_ALM.CL1",
+      #cleaner 2
+      "ABERT_VAL_FC_CLEANER_2",
+      "DEPRESSOR_FC10_LH",
+      "GHU_CLEANER_II_FC_CLEANER_2",
+      "PH_CLEANER_II",
+      "PRESSAO_ALIM_CL2",
+      "QgQs_CLEANER_II",
+      "VAL_DESC_CLEANER_II_MV",
+      "VAZAO_AR_CLEA_2_FC_CLEANER_2",
+      #cleaner scavenger
+      "ABERT_VAL_FC_CLEANER_SCAV",
+      "DEPRESSOR_FC14_LH",
+      "GHU_SCAV_CLEANER_FC_CLEANER_SCAV",
+      "PRESSAO_ALIM_CL_SCV",
+      "QG_QS_CL_SCV_PV",
+      "QgQs_CLEANER_SCV",
+      "QgQs_CLEANER_SCV_SP",
+      "VAL_DESC_CLEANER_SCV_MV",
+      "VAZAO_AR_SC_FC_CLEANER_SCAV",
+      "Coletor 1 (g/t)_ALM-SCV",
+      #ROM
+      "Sulfetado_HG_Estoque",
+      "Sulfetado_LG_Estoque",
+      "Sulfetado_MG_Estoque",
+      "Sulfetado_SHG_Estoque",
+      "Sulfetado_HG_Fase1",
+      "Sulfetado_MG_Fase1",
+      "Sulfetado_SHG_Fase1",
+      "Sulfetado_HG_Fase2",
+      "Sulfetado_LG_Fase2",
+      "Sulfetado_MG_Fase2"
+    ]

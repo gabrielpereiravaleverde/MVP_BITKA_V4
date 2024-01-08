@@ -1,0 +1,6 @@
+raw_data_version: '2023_12_18-07_00_00'
+previous_raw_data_version: '2023_12_10-17_00_00'
+comments: "final version of rec_global model"
+models_to_solve: 
+  - conc_cd
+  - rec_global

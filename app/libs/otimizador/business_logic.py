@@ -1,10 +1,13 @@
 from typing import Dict, Tuple, List, Any, Union
 import pandas as pd
-import libs.otimizador.optimizer as opt
+import libs.otimizador.optimization.optimizer as opt
 import io
+from libs.utils.utils import *
+
+import numpy as np
 
 def predict(input_data: Any, model: Any) -> Any:
-    """Predict the output using the global model variable based on the provided input data.
+    """Predict the output using the global modelF variable based on the provided input data.
 
     Args:
         input_data: Input data for prediction.
@@ -12,6 +15,7 @@ def predict(input_data: Any, model: Any) -> Any:
     Returns:
         The prediction result. If the prediction is a list or ndarray, the first value is returned.
     """
+
     pred = model.predict(input_data)
     # Ensure we are returning a single value. Adapt according to your model's output.
     return pred[0] if isinstance(pred, (list, np.ndarray)) else pred
@@ -22,16 +26,15 @@ def optimize_all_columns(model: Any,
                          user_restrictions: Dict[str, Tuple[float, float]], 
                          relevant_cols: List[str], 
                          max_evals: int = 100,
-                         type_opt = 'GridSearchOptimizer') -> Dict[str, float]:
+                         type_opt: str = "O parâmetro do otimizador não está em etapas.yaml") -> Dict[str, float]:
     """Optimize all columns based on the given model and data, with user-defined restrictions.
-
     Args:
         model: Model used for prediction.
         data: Data used for optimization.
         user_restrictions: Dictionary with restrictions for output variables.
         relevant_cols: List of columns to optimize.
         max_evals: Maximum number of evaluations.
-
+        type_opt: Type of optimizer to use ('Bayesian' or 'GridSearch').
     Returns:
         Dictionary containing the best value for the columns being optimized.
     """
@@ -39,17 +42,30 @@ def optimize_all_columns(model: Any,
     r = dict(zip(relevant_cols, range(len(relevant_cols))))
 
     fixed_data = pd.DataFrame(input_values, index=[0])
+
     evaluator = opt.ModelEvaluate(model=model, fixed_data=fixed_data)
 
     decision_variables = {}
     for f in relevant_cols: 
         f_min = user_restrictions[f][0] if f in user_restrictions.keys() else data[f].quantile(0.1)
         f_max = user_restrictions[f][1] if f in user_restrictions.keys() else data[f].quantile(0.9)
-        decision_variables[f] = {'method': 'linear', 'min': f_min, 'max': f_max, 'steps': 300}
-    # Create a GridSearchOptimizer instance and set the progress callback
-    ItGridSearchOptimizer = opt.ItGridSearchOptimizer(decision_variables=decision_variables, objective_function=evaluator, feature_engineering = None, max_combination_size = 10e6)
+        decision_variables[f] = {'method': 'linear', 'min': f_min, 'max': f_max, 'steps': 100}
+        
+    # Conditional logic based on optimizer type
+    if type_opt == 'Bayesian':
+        optimizer = opt.BayesianOptimizer(decision_variables=decision_variables, 
+                                          objective_function=evaluator, 
+                                          feature_engineering=None)
+    elif type_opt == 'GridSearch':
+        optimizer = opt.ItGridSearchOptimizer(decision_variables=decision_variables, 
+                                              objective_function=evaluator, 
+                                              feature_engineering=None, 
+                                              max_combination_size=10e6)
+    else:
+        raise ValueError(f"Unknown optimizer type: {type_opt}")
+
     # Perform optimization
-    s = ItGridSearchOptimizer.optimize()
+    s = optimizer.optimize()
 
     r = dict(zip(s.columns, s.round(4).values.ravel()))
     del r['fitness']

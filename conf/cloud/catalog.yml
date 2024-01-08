@@ -1,0 +1,296 @@
+# Here you can define all your data sets by using simple YAML syntax.
+#
+# Documentation for this file format can be found in "The Data Catalog"
+# Link: https://kedro.readthedocs.io/en/stable/data/data_catalog.html
+#
+# We support interacting with a variety of data stores including local file systems, cloud, network and HDFS
+#
+# The Data Catalog supports being able to reference the same file using two different Dataset implementations
+# (transcoding), templating and a way to reuse arguments that are frequently repeated. See more here:
+# https://kedro.readthedocs.io/en/stable/data/data_catalog.html
+
+metadata:
+  type: json.JSONDataSet
+  filepath: conf/base/metadata.json
+
+random_indexes:
+  type: json.JSONDataSet
+  filepath: conf/base/random_indexes.json
+
+balanco_de_massas_raw:
+  type: PartitionedDataset
+  path: abfs://mvvflotacao/01_raw/balanco_de_massas/
+  credentials: azure_data_storage
+  filename_suffix: .xlsx
+  dataset:
+    type: pandas.ExcelDataSet
+    load_args:
+      engine: openpyxl
+      decimal: "."
+      parse_dates: ["DATA"]
+
+blend_raw:
+  type: PartitionedDataset
+  path: abfs://mvvflotacao/01_raw/blend/
+  credentials: azure_data_storage
+  filename_suffix: .xlsx
+  dataset:
+    type: pandas.ExcelDataSet
+    load_args:
+      engine: openpyxl
+      decimal: "."
+
+carta_controle_pims_raw:
+  type: PartitionedDataset
+  path: abfs://mvvflotacao/01_raw/carta_controle_pims/
+  credentials: azure_data_storage
+  filename_suffix: .xlsx
+  dataset:
+    type: pandas.ExcelDataSet
+    load_args:
+      engine: openpyxl
+      decimal: "."
+      parse_dates: ["DATA"]
+
+laboratorio_raw:
+  type: PartitionedDataset
+  path: abfs://mvvflotacao/01_raw/laboratorio/
+  credentials: azure_data_storage
+  filename_suffix: .xlsx
+  dataset:
+    type: pandas.ExcelDataSet
+    load_args:
+      engine: openpyxl
+      decimal: "."
+      parse_dates: ["DATA"]
+
+laboratorio_raiox_raw:
+  type: PartitionedDataset
+  path: abfs://mvvflotacao/01_raw/laboratorio_raiox/
+  credentials: azure_data_storage
+  filename_suffix: .xlsx
+  dataset:
+    type: pandas.ExcelDataSet
+    load_args:
+      engine: openpyxl
+      decimal: "."
+      parse_dates: ["DATA"]
+
+reagentes_raw:
+  type: PartitionedDataset
+  path: abfs://mvvflotacao/01_raw/reagentes/
+  credentials: azure_data_storage
+  filename_suffix: .xlsx
+  dataset:
+    type: pandas.ExcelDataSet
+    load_args:
+      engine: openpyxl
+      decimal: "."
+      skiprows: 4
+      header: [0, 1]
+
+#  Processados
+
+balanco_de_massas_pre:
+  type: pandas.ParquetDataSet
+  filepath: data/02_intermediate/balanco_de_massas_pre.pq
+
+blend_pre:
+  type: pandas.ParquetDataSet
+  filepath: data/02_intermediate/blend_pre.pq
+
+carta_controle_pims_pre:
+  type: pandas.ParquetDataSet
+  filepath: data/02_intermediate/carta_controle_pims_pre.pq
+
+laboratorio_pre:
+  type: pandas.ParquetDataSet
+  filepath: data/02_intermediate/laboratorio_pre.pq
+
+laboratorio_raiox_pre:
+  type: pandas.ParquetDataSet
+  filepath: data/02_intermediate/laboratorio_raiox_pre.pq
+
+reagentes_pre:
+  type: pandas.ParquetDataSet
+  filepath: data/02_intermediate/reagentes_pre.pq
+
+# Pivot
+
+blend_pivot:
+  type: pandas.ParquetDataset
+  filepath: data/02_intermediate/blend_pivot.pq
+
+#  Primary
+
+merged_raw_data:
+  type: pandas.ParquetDataset
+  filepath: data/03_primary/merged_raw_data.pq
+
+#  Feature
+
+filtered_data:
+  type: pandas.ParquetDataset
+  filepath: data/04_feature/filtered_data.pq
+
+aggregated_data:
+  type: pandas.ParquetDataset
+  filepath: data/04_feature/aggregated_data.pq
+
+aggregated_data_with_new_features:
+  type: pandas.ParquetDataset
+  filepath: data/04_feature/aggregated_data_with_new_features.pq
+
+train_data_randomly:
+  type: pandas.ParquetDataSet
+  filepath: data/04_feature/train_data_randomly.pq
+
+test_data_randomly:
+  type: pandas.ParquetDataSet
+  filepath: data/04_feature/test_data_randomly.pq
+
+train_data_by_date:
+  type: pandas.ParquetDataSet
+  filepath: data/04_feature/train_data_by_date.pq
+
+test_data_by_date:
+  type: pandas.ParquetDataSet
+  filepath: data/04_feature/test_data_by_date.pq
+
+#  Model Inputs
+
+"{model_name}_full_data_corrected_type":
+  type: pandas.ParquetDataset
+  filepath: data/05_model_input/{model_name}/full_data_corrected_type.pq
+
+"{model_name}_full_data_without_correlation_s0":
+  type: pandas.ParquetDataset
+  filepath: data/05_model_input/{model_name}/full_data_without_correlation_s0.pq
+
+"{model_name}_randomly_train_data":
+  type: pandas.ParquetDataset
+  filepath: data/05_model_input/{model_name}/randomly_train_data.pq
+
+"{model_name}_randomly_train_data_s0":
+  type: pandas.ParquetDataset
+  filepath: data/05_model_input/{model_name}/randomly_train_data_s0.pq
+
+"{model_name}_randomly_train_data_s1":
+  type: pandas.ParquetDataset
+  filepath: data/05_model_input/{model_name}/randomly_train_data_s1.pq
+
+"{model_name}_randomly_train_data_s2":
+  type: pandas.ParquetDataset
+  filepath: data/05_model_input/{model_name}/randomly_train_data_s2.pq
+
+"{model_name}_randomly_test_data":
+  type: pandas.ParquetDataset
+  filepath: data/05_model_input/{model_name}/randomly_test_data.pq
+
+"{model_name}_by_date_train_data":
+  type: pandas.ParquetDataset
+  filepath: data/05_model_input/{model_name}/by_date_train_data.pq
+
+"{model_name}_by_date_train_data_s0":
+  type: pandas.ParquetDataset
+  filepath: data/05_model_input/{model_name}/by_date_train_data_s0.pq
+
+"{model_name}_by_date_train_data_s1":
+  type: pandas.ParquetDataset
+  filepath: data/05_model_input/{model_name}/by_date_train_data_s1.pq
+
+"{model_name}_by_date_train_data_s2":
+  type: pandas.ParquetDataset
+  filepath: data/05_model_input/{model_name}/by_date_train_data_s2.pq
+
+"{model_name}_by_date_test_data":
+  type: pandas.ParquetDataset
+  filepath: data/05_model_input/{model_name}/by_date_test_data.pq
+
+# Hyperparameters Trials
+
+"{model_name}_hyperparameters_trials":
+  type: json.JSONDataset
+  filepath: abfs://mvvflotacao/05_model_input/{model_name}/hyperparameters_trials.json
+  credentials: azure_data_storage
+
+# Hyperparameters
+
+"{model_name}_hyperparameters":
+  type: json.JSONDataset
+  filepath: abfs://mvvflotacao/05_model_input/{model_name}/hyperparameters_tracking/hyperparameter.json
+  credentials: azure_data_storage
+  versioned: True
+
+"{model_name}_latest_hyperparameters":
+  type: json.JSONDataset
+  filepath: data/05_model_input/{model_name}/latest_hyperparameters/hyperparameter.json
+
+# EBM Models
+
+"ebm_{model_name}_randomly":
+  type: pickle.PickleDataset
+  filepath: data/06_models/ebm_{model_name}_randomly.pickle
+
+"ebm_{model_name}_by_date":
+  type: pickle.PickleDataset
+  filepath: data/06_models/ebm_{model_name}_by_date.pickle
+
+# Conformal Models
+
+"conformal_model_{model_name}_randomly":
+  type: pickle.PickleDataset
+  backend: cloudpickle
+  filepath: data/06_models/conformal_model_{model_name}_randomly.pickle
+
+"conformal_model_{model_name}_by_date":
+  type: pickle.PickleDataset
+  backend: cloudpickle
+  filepath: data/06_models/conformal_model_{model_name}_by_date.pickle
+
+# Predicted Values
+
+"{model_name}_randomly_test_predicted":
+  type: pandas.ParquetDataset
+  filepath: data/07_model_output/{model_name}_randomly_test_predicted.pq
+
+"{model_name}_by_date_test_predicted":
+  type: pandas.ParquetDataset
+  filepath: data/07_model_output/{model_name}_by_date_test_predicted.pq
+
+# RMSE for Models
+
+"{model_name}_randomly_ebm_score":
+  type: json.JSONDataset
+  filepath: data/07_model_output/{model_name}_randomly_ebm_score.json
+
+"{model_name}_by_date_ebm_score":
+  type: json.JSONDataset
+  filepath: data/07_model_output/{model_name}_by_date_ebm_score.json
+
+# Conformal Inference
+
+"{model_name}_randomly_conformal_inference":
+  type: pandas.ParquetDataset
+  filepath: data/07_model_output/{model_name}/{model_name}_randomly_conformal_inference.pq
+
+"{model_name}_by_date_conformal_inference":
+  type: pandas.ParquetDataset
+  filepath: data/07_model_output/{model_name}/{model_name}_by_date_conformal_inference.pq
+
+# Validation Frames
+
+"{model_name}_randomly_results":
+  type: pandas.ParquetDataset
+  filepath: data/07_model_output/{model_name}_randomly_results.pq
+
+"{model_name}_by_date_results":
+  type: pandas.ParquetDataset
+  filepath: data/07_model_output/{model_name}_by_date_results.pq
+
+# Simulation
+
+"{model_name}_simulations_plot":
+  type: matplotlib.MatplotlibWriter
+  filepath: data/08_reporting/{model_name}_simulations_plot.png
+  versioned: true
